@@ -65,17 +65,14 @@ LUALIB_API int luaopen_rand(lua_State *L)
     luaL_newmetatable(L, META_TABLE_NAME);
     luaL_setfuncs(L, R, 0);
 
-    lua_pushliteral(L, "name");
     lua_pushliteral(L, NAME);
-    lua_settable(L, -3);
+    lua_setfield(L, -2, "name");
 
-    lua_pushliteral(L, "version");
     lua_pushliteral(L, VERSION);
-    lua_settable(L, -3);
+    lua_setfield(L, -2, "version");
 
-    lua_pushliteral(L, "__index");
-    lua_pushvalue(L, -2);
-    lua_settable(L, -3);
+    lua_pushvalue(L, -1);
+    lua_setfield(L, -2, "__index");
 
     return 1;
 }
