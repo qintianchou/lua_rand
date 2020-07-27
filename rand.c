@@ -36,23 +36,6 @@ static int rand_next(lua_State *L)
     return 1;
 }
 
-/*
-** set functions from list 'l' into table at top - 'nup'; each
-** function gets the 'nup' elements at the top as upvalues.
-** Returns with only the table at the stack.
-*/
-static void luaL_setfuncs (lua_State *L, const luaL_Reg *l, int nup) {
-  luaL_checkstack(L, nup, "too many upvalues");
-  for (; l->name != NULL; l++) {  /* fill the table with given functions */
-    int i;
-    for (i = 0; i < nup; i++)  /* copy upvalues to the top */
-      lua_pushvalue(L, -nup);
-    lua_pushcclosure(L, l->func, nup);  /* closure with those upvalues */
-    lua_setfield(L, -(nup + 2), l->name);
-  }
-  lua_pop(L, nup);  /* remove upvalues */
-}
-
 static const luaL_Reg R[] = 
 {
     {"new", rand_new},
@@ -63,7 +46,7 @@ static const luaL_Reg R[] =
 LUALIB_API int luaopen_rand(lua_State *L) 
 {
     luaL_newmetatable(L, META_TABLE_NAME);
-    luaL_setfuncs(L, R, 0);
+    luaL_register(L, NULL, R);
 
     lua_pushliteral(L, NAME);
     lua_setfield(L, -2, "name");
